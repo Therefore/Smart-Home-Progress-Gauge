@@ -2,8 +2,9 @@
 ESPHome enabled Gauge
 Monitor the progress of things in home assistant. This example shows how to do it for a Tesla battery state of charge, but you could use it for a 3D printers percent completion or other percent related activities.
 
-![Smart-Home-Progress-Gauge](https://www.imgur.com/a/J61dQm2.gif)
+![Smart-Home-Progress-Gauge](https://imgur.com/a/TnUsZRi.gif)
 
+![Screenshot](http://i.imgur.com/dNYswmI.gif)
 
 Features:
 - Scales to any size LED array
