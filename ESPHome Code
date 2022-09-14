@@ -1,0 +1,72 @@
+#Put this directly after the captive_portal:
+light:
+  - platform: neopixelbus
+    id: ringlight    
+    type: GRB
+    variant: WS2811
+    pin: GPIO4
+    num_leds: 35 #change this to the number of LEDS in your strip
+    name: "NeoPixel LED Ring"
+    effects:
+        - addressable_lambda:
+            name: "Percentage"
+            update_interval: 100ms
+            lambda: |-
+              int MaxPercent = it.size()*id(batterysensor).state*0.01;  // Battery Percent - Change this to your sensor
+              static int startloc = 0;                                  // initial start location
+              if(isnan(MaxPercent)){                                    // if ESPhome hasn't got the value yet this doesn't really work
+              it.range(0,it.size()-1) = Color(255,0,255);               // turn the lights blue this doesn't really work
+              } else {
+              
+              if(!id(chargersensor).state){                             // If the car is NOT charging
+                
+              auto call = id(ringlight).turn_on();                      // Turn on the lights
+              if(startloc > 0 && startloc<it.size()*0.10){              // if it's less than 10%
+              it[startloc-1] = Color(255,0,0);                          // turn the LED behind the white led back to red
+              }
+              if(startloc>=it.size()*0.10 && startloc<=it.size()*0.20){ //If it's above 10% and up to and including 20%
+              it[startloc-1] = Color(255,255,0);                        // turn the LED behind the white led back to yellow
+              }
+              if(startloc>=it.size()*0.20){ // if it's above 20%        // if it's above 20%
+              it[startloc-1] = Color(0,255,0);                          // turn the LED behind the white led back to yellow
+              }
+              startloc ++;                                              // incriment the LED location
+              if(startloc > MaxPercent){                                // if the LED reaches the max percentage
+              it.range(MaxPercent,it.size()) = Color(0,0,0);            // blackout the LEDs from the max percent LED to the end of the strip
+              startloc = 0;                                             // reset the location of the sweeping LED.
+              }
+                
+              } else {                                                  // If the car IS charging
+
+
+              auto call = id(ringlight).turn_on();                      // Turn on the lights
+              it[startloc] = Color(255,255,255);                        // turn on a white light at the starting location - Typically 0
+              if(startloc > 0 && startloc<it.size()*0.10){              // if it's less than 10%
+              it[startloc-1] = Color(255,0,0);                          // turn the LED behind the white led back to red
+              }
+              if(startloc>=it.size()*0.10 && startloc<=it.size()*0.20){ //If it's above 10% and up to and including 20%
+              it[startloc-1] = Color(255,255,0);                        // turn the LED behind the white led back to yellow
+              }
+              if(startloc>=it.size()*0.20){                             // if it's above 20%
+              it[startloc-1] = Color(0,255,0);                          // turn the LED behind the white led back to yellow            
+              }
+              startloc ++;                                              // incriment the LED location
+              if(startloc > MaxPercent){                                // if the LED reaches the max percentage
+              it.range(MaxPercent,it.size()) = Color(0,0,0);          // blackout the LEDs from the max percent LED to the end of the strip
+              startloc = 0;                                             // reset the location of the sweeping LED.
+              }
+              }
+              }
+              
+              
+sensor:
+  - platform: homeassistant
+    id: batterysensor
+    name: "Tesla Battery Sensor"
+    entity_id: sensor.tesla_battery_sensor
+
+binary_sensor:
+  - platform: homeassistant
+    id: chargersensor
+    name: "Tesla Charging State"
+    entity_id: binary_sensor.tesla_charger_sensor
