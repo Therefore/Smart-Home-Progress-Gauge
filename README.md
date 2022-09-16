@@ -14,10 +14,10 @@ Assembly:
 
 
 Features:
-📈 Scales to any size LED array - circular or bar.
-⚠️ Shows sevarity in red and yellow at 10% and 20% (configurable)
-🔄 Can show a sweeping LED to show forward progress based on another sensor. In this case the LED sweeps if the car is plugged in.
-💡 Dimmable through Home Assistant
+📈 Scales to any size LED array - circular or bar.    
+⚠️ Shows sevarity in red and yellow at 10% and 20% (configurable)     
+🔄 Can show a sweeping LED to show forward progress based on another sensor. In this case the LED sweeps if the car is plugged in.    
+💡 Dimmable through Home Assistant    
 
 
 
